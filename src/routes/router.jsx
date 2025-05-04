@@ -1,8 +1,11 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import Cart from "../pages/Cart";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import Order from "../pages/Order";
+import Register from "../pages/Register";
 
 export const BASE_URL = import.meta.env.VITE_URL;
 
@@ -21,8 +24,20 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "cart",
+        element: <Cart />,
+      },
+      {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "order",
+        element: <Order />,
       },
     ],
   },

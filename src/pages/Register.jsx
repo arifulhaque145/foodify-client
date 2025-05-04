@@ -1,32 +1,45 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import auth from "../firebase/firebase.init";
 
-export default function Login() {
+export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { actionUser } = useAuth();
 
   const onSubmit = async (data) => {
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      actionUser(data.email);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      await updateProfile(userCredential.user, { displayName: data.name });
+      console.log(userCredential.user);
+
       navigate("/");
     } catch (error) {
-      console.error("Login error:", error.message);
+      console.error("Registration error:", error.message);
     }
   };
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <input
+          type="text"
+          placeholder="Name"
+          className="input input-bordered w-full"
+          {...register("name", { required: "Name is required" })}
+        />
+        {errors.name && (
+          <p className="text-red-500 text-sm">{errors.name.message}</p>
+        )}
         <input
           type="email"
           placeholder="Email"
@@ -41,14 +54,17 @@ export default function Login() {
           type="password"
           placeholder="Password"
           className="input input-bordered w-full"
-          {...register("password", { required: "Password is required" })}
+          {...register("password", {
+            required: "Password is required",
+            minLength: 6,
+          })}
         />
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
 
         <button className="btn btn-primary w-full" type="submit">
-          Login
+          Register
         </button>
       </form>
     </div>

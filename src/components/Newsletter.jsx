@@ -1,0 +1,24 @@
+export default function Newsletter() {
+  return (
+    <section className="py-16 bg-primary text-primary-content">
+      <div className="max-w-3xl mx-auto px-4 text-center">
+        <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+        <p className="mb-6 text-lg">
+          Get exclusive offers, discounts, and updates on your favorite meals!
+        </p>
+
+        <form className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            className="input input-bordered w-full sm:w-2/3"
+            required
+          />
+          <button type="submit" className="btn btn-accent w-full sm:w-auto">
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+}
