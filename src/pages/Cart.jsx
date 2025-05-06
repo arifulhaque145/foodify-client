@@ -1,14 +1,20 @@
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
-import { useAuth } from "../context/AuthContext";
+import CheckoutModal from "../components/CheckoutModal";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Cart() {
   const shippingCost = 10;
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const { state, actionClearCart } = useAuth();
+  const { state, actionClearCart, actionPlaceOrder } = useAuth();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const payment = true;
+  const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
   const handleApplyPromoCode = () => {
     if (promoCode === "DISCOUNT10") {
@@ -29,11 +35,14 @@ export default function Cart() {
   const handleProceedToOrder = () => {
     const newOrder = {
       id: Date.now(),
-      items: state.cartItems,
+      user: state.user,
+      totalItems: state.cartItems,
       total: getCartTotal(),
       date: new Date().toLocaleString(),
+      status: "pending",
     };
 
+    actionPlaceOrder(newOrder);
     alert("Order placed successfully...");
     actionClearCart();
     navigate("/");
@@ -85,13 +94,25 @@ export default function Cart() {
 
         {/* Proceed Button */}
         <div className="mt-6">
-          <button
-            onClick={handleProceedToOrder}
-            className="bg-green-500 text-white px-6 py-2 rounded-md w-full"
-          >
-            Proceed to Order
-          </button>
+          {payment ? (
+            <button
+              onClick={handleProceedToOrder}
+              className="bg-green-500 text-white px-6 py-2 rounded-md w-full"
+            >
+              Proceed to Order
+            </button>
+          ) : (
+            <button
+              onClick={() => setOpen(true)}
+              className="bg-green-500 text-white px-6 py-2 rounded-md w-full"
+            >
+              Payment Checkout
+            </button>
+          )}
         </div>
+        <Elements stripe={stripePromise}>
+          <CheckoutModal isOpen={open} setIsOpen={setOpen} />
+        </Elements>
       </div>
     </div>
   );

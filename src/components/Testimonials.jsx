@@ -26,9 +26,7 @@ export default function Testimonials() {
   return (
     <section className="py-16 bg-base-200 text-base-content">
       <div className="max-w-6xl mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold text-primary mb-6">
-          What Our Customers Say
-        </h2>
+        <h2 className="text-3xl font-bold mb-6">What Our Customers Say</h2>
         <p className="mb-10 text-lg">Real stories from happy food lovers</p>
 
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

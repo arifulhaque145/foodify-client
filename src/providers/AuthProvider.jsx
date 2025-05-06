@@ -81,11 +81,7 @@ function authReducer(state, action) {
     case actionTypes.placeOrder: {
       return {
         ...state,
-        cartItems: state.cartItems.map((item) =>
-          item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        ),
+        orderItems: [...state.orderItems, action.payload],
       };
     }
     default:

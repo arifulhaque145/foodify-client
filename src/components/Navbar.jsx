@@ -1,10 +1,12 @@
 import { signOut } from "firebase/auth";
+import React from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import logo from "../assets/foodify_icon.png";
 import auth from "../firebase/firebase.init";
-import React, { useState, useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import ItemButton from "./ItemButton";
 
 const SideButton = () => (
   <svg
@@ -40,7 +42,7 @@ function Navs() {
       <li>
         <Link to="/cart">
           <FaShoppingCart className="text-2xl text-gray-700" />
-          <span className="badge badge-sm badge-primary absolute top-0 right-0">
+          <span className="badge badge-sm badge-accent absolute top-0 right-0">
             {state.cartItems.length}
           </span>
         </Link>
@@ -53,12 +55,12 @@ function Navs() {
             </Link>
           </li>
           <li>
-            <button
-              className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-              onClick={logout}
-            >
-              Logout <FiLogOut />
-            </button>
+            <ItemButton
+              title="Logout"
+              style="btn-secondary btn-outline"
+              icon={<FiLogOut />}
+              click={logout}
+            />
           </li>
         </>
       ) : (
@@ -87,15 +89,16 @@ function Navs() {
 
 export default function Navbar() {
   return (
-    <div className="fixed top-0 right-0 z-50 navbar bg-base-100 shadow-md">
+    <div className="fixed top-0 left-0 right-0 z-50 navbar bg-base-100 shadow-md">
       <div className="flex-1">
         <Link to="/" className="btn btn-ghost text-xl text-red-500">
-          FOODIFY
+          <img src={logo} alt="Logo" className="w-20 h-auto" />
+          <span className="text-2xl font-bold">FOODIFY</span>
         </Link>
       </div>
 
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1 hidden md:flex">
+        <ul className="menu menu-horizontal px-1 hidden md:flex md:mr-4">
           <Navs />
         </ul>
 

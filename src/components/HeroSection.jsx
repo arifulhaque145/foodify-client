@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import ItemButtonLink from "./ItemButtonLink";
 
 export default function HeroSection() {
   return (
@@ -10,16 +10,19 @@ export default function HeroSection() {
           alt="Delicious Food"
         />
         <div>
-          <h1 className="text-5xl font-bold text-primary">
+          <h1 className="text-5xl font-bold">
             Fresh & Fast Food Delivered to Your Door!
           </h1>
           <p className="py-6 text-base-content">
             Discover the best meals in town. Whether you're craving burgers,
             pizza, or healthy options — we've got you covered.
           </p>
-          <Link to="/menu" className="btn btn-primary">
-            Order Now 🍽️
-          </Link>
+          <ItemButtonLink
+            title="Order Now 🍽️"
+            link="/menu"
+            color="btn-success"
+            outline="btn-outline"
+          />
         </div>
       </div>
     </section>

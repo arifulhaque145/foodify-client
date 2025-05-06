@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import MenuItem from "./MenuItem";
 
 const dishes = [
   {
@@ -28,7 +28,7 @@ const dishes = [
     id: 4,
     name: "Salad",
     image: "https://picsum.photos/300?4",
-    price: 6.50,
+    price: 6.5,
     description: "Healthy green salad with vinaigrette dressing.",
   },
   {
@@ -42,7 +42,7 @@ const dishes = [
     id: 6,
     name: "Tacos",
     image: "https://picsum.photos/300?6",
-    price: 11.20,
+    price: 11.2,
     description: "Spicy beef tacos with cheese and salsa.",
   },
 ];
@@ -52,7 +52,6 @@ const CARD_WIDTH = 300; // px
 export default function PopularDishes() {
   const [index, setIndex] = useState(0);
   const maxIndex = dishes.length - 3;
-  const { state, actionAddToCart } = useAuth();
 
   const next = () => {
     if (index < maxIndex - 1) setIndex(index + 1);
@@ -92,36 +91,7 @@ export default function PopularDishes() {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
           {dishes.map((dish) => (
-            <div
-              key={dish.id}
-              className="w-[300px] flex-shrink-0 card bg-base-200 shadow-xl"
-            >
-              <figure>
-                <img
-                  src={dish.image}
-                  alt={dish.name}
-                  className="h-48 w-full object-cover"
-                />
-              </figure>
-              <div className="card-body">
-                <h3 className="card-title">{dish.name}</h3>
-                <p className="text-sm text-gray-600 mt-1">{dish.description}</p>
-                <p className="text-primary font-bold">{dish.price}</p>
-                <button
-                  className="btn btn-sm btn-primary mt-2"
-                  onClick={() =>
-                    actionAddToCart({
-                      id: dish.id,
-                      name: dish.name,
-                      img: dish.image,
-                      price: dish.price,
-                    })
-                  }
-                >
-                  Add to cart
-                </button>
-              </div>
-            </div>
+            <MenuItem dish={dish} />
           ))}
         </motion.div>
       </div>
