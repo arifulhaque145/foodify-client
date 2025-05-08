@@ -1,4 +1,5 @@
-import ItemButtonLink from "./ItemButtonLink";
+import ItemButtonLink from "./shared/ItemButtonLink";
+import TitleParagraph from "./shared/TitleParagraph";
 
 export default function HeroSection() {
   return (
@@ -10,13 +11,14 @@ export default function HeroSection() {
           alt="Delicious Food"
         />
         <div>
-          <h1 className="text-5xl font-bold">
-            Fresh & Fast Food Delivered to Your Door!
-          </h1>
-          <p className="py-6 text-base-content">
-            Discover the best meals in town. Whether you're craving burgers,
-            pizza, or healthy options — we've got you covered.
-          </p>
+          <TitleParagraph
+            title="Fresh & Fast Food Delivered to Your Door!"
+            titleStyle="text-5xl font-bold"
+            paragraph="Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet
+            inventore commodi corporis est itaque illo modi libero ullam
+            nesciunt voluptatem?"
+            paraStyle="py-6 text-base-content"
+          />
           <ItemButtonLink
             title="Order Now 🍽️"
             link="/menu"

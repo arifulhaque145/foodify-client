@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import MenuItem from "./MenuItem";
+import TitleParagraph from "./shared/TitleParagraph";
 
 const dishes = [
   {
@@ -63,10 +64,12 @@ export default function PopularDishes() {
 
   return (
     <div className="py-12 px-4 max-w-7xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-center text-primary">
-        Popular Dishes
-      </h2>
-
+      <TitleParagraph
+        title="Popular Dishes"
+        paragraph="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, soluta."
+        titleStyle="text-3xl font-bold mb-6 text-center"
+        paraStyle="text-center"
+      />
       <div className="flex justify-end gap-4 mb-4">
         <button
           onClick={prev}

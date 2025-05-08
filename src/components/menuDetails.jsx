@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function menuDetails({ menu }) {
-  return <div>menuDetails</div>;
+export default function MenuDetails({ menu }) {
+  return <div>menuDetails {menu}</div>;
 }

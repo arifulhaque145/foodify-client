@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import logo from "../assets/foodify_icon.png";
 import auth from "../firebase/firebase.init";
 import { useAuth } from "../hooks/useAuth";
-import ItemButton from "./ItemButton";
+import ItemButton from "./shared/ItemButton";
 
 const SideButton = () => (
   <svg
@@ -42,9 +42,13 @@ function Navs() {
       <li>
         <Link to="/cart">
           <FaShoppingCart className="text-2xl text-gray-700" />
-          <span className="badge badge-sm badge-accent absolute top-0 right-0">
-            {state.cartItems.length}
-          </span>
+          {!state.cartItems.length ? (
+            ""
+          ) : (
+            <span className="badge badge-sm badge-accent absolute top-0 right-0">
+              {state.cartItems.length}
+            </span>
+          )}
         </Link>
       </li>
       {state.user ? (
@@ -98,7 +102,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1 hidden md:flex md:mr-4">
+        <ul className="menu menu-horizontal px-1 hidden md:flex lg:mr-4">
           <Navs />
         </ul>
 

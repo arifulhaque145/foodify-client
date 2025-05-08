@@ -1,12 +1,15 @@
+import TitleParagraph from "./shared/TitleParagraph";
+
 export default function Newsletter() {
   return (
     <section className="py-16 bg-emerald-800 text-primary-content">
       <div className="max-w-3xl mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-        <p className="mb-6 text-lg">
-          Get exclusive offers, discounts, and updates on your favorite meals!
-        </p>
-
+        <TitleParagraph
+          title="Subscribe to Our Newsletter"
+          paragraph="Get exclusive offers, discounts, and updates on your favorite meals!"
+          titleStyle="text-3xl font-bold mb-4"
+          paraStyle="mb-6 text-lg"
+        />
         <form className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <input
             type="email"

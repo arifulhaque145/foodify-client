@@ -1,119 +1,136 @@
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
-import CheckoutModal from "../components/CheckoutModal";
+import ItemButton from "../components/shared/ItemButton";
+import TitleParagraph from "../components/shared/TitleParagraph";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Cart() {
-  const shippingCost = 10;
+  const { state, actionClearCart } = useAuth();
+
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const { state, actionClearCart, actionPlaceOrder } = useAuth();
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const payment = true;
-  const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK);
 
-  const handleApplyPromoCode = () => {
-    if (promoCode === "DISCOUNT10") {
-      setDiscount(10);
+  const subtotal = state.cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const shippingCost = subtotal > 0 ? 10 : 0;
+  const total = subtotal + shippingCost - discount;
+
+  const handleApplyPromo = () => {
+    if (promoCode.toUpperCase() === "DISCOUNT10") {
+      setDiscount(subtotal * 0.1);
     } else {
       setDiscount(0);
     }
   };
 
-  const getCartTotal = () => {
-    const total = state.cartItems.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
-    return total - (total * discount) / 100;
-  };
-
-  const handleProceedToOrder = () => {
-    const newOrder = {
-      id: Date.now(),
-      user: state.user,
-      totalItems: state.cartItems,
-      total: getCartTotal(),
-      date: new Date().toLocaleString(),
-      status: "pending",
-    };
-
-    actionPlaceOrder(newOrder);
-    alert("Order placed successfully...");
-    actionClearCart();
-    navigate("/");
-  };
-
   return (
-    <div className="container mx-auto py-8">
-      <h2 className="text-3xl font-semibold mb-4">Your Cart</h2>
-
-      <div className="space-y-4">
-        {state.cartItems.map((item) => (
-          <CartItem key={item.id} item={item} />
-        ))}
-      </div>
-
-      {/* Cart Summary */}
-      <div className="mt-6 border-t pt-4">
-        <div className="flex justify-between text-lg">
-          <span>Subtotal:</span>
-          <span>${getCartTotal().toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-lg">
-          <span>Shipping:</span>
-          <span>${shippingCost}.00</span>
-        </div>
-
-        {/* Promo Code */}
-        <div className="mt-4 flex items-center">
-          <input
-            type="text"
-            value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value)}
-            placeholder="Promo Code"
-            className="px-4 py-2 border border-gray-300 rounded-md w-40"
+    <div className="container mx-auto px-4 py-8">
+      {state.cartItems.length === 0 ? (
+        <p className="text-center text-4xl uppercase font-light">
+          Your cart is empty.
+        </p>
+      ) : (
+        <>
+          <TitleParagraph
+            title="Your Cart"
+            paragraph="Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, nobis."
+            titleStyle="text-3xl font-bold text-center mb-2 "
+            paraStyle="text-center mb-6 text-slate-500 italic"
           />
-          <button
-            onClick={handleApplyPromoCode}
-            className="ml-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            Apply
-          </button>
-        </div>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="w-full">
+              <div className="card bg-base-100 shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">Shopping Items</h2>
+                {/* Table View for Cart Items */}
+                <table className="table w-full">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Quantity</th>
+                      <th>Total</th>
+                      <th className="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {state.cartItems.map((item) => (
+                      <CartItem key={item.id} item={item} />
+                    ))}
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td className="text-center">
+                        <ItemButton
+                          title="Clear Cart"
+                          style="btn-success btn-outline"
+                          click={actionClearCart}
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-        {/* Total Price */}
-        <div className="flex justify-between text-xl font-bold mt-4">
-          <span>Total:</span>
-          <span>${(getCartTotal() + shippingCost).toFixed(2)}</span>
-        </div>
+            {/* Summary */}
+            <div className="w-full lg:w-1/3">
+              <div className="card bg-base-100 shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                <div className="flex justify-between mb-2">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <span>Shipping</span>
+                  <span>${shippingCost.toFixed(2)}</span>
+                </div>
+                <div className="mt-4">
+                  <label className="label">
+                    <span className="label-text">Promo Code</span>
+                  </label>
+                  <div className="flex">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      placeholder="Enter code"
+                      className="input input-bordered flex-1"
+                    />
+                    <button
+                      onClick={handleApplyPromo}
+                      className="btn btn-success ml-2"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  {discount > 0 && (
+                    <p className="text-sm text-green-500 mt-2">
+                      Discount applied: -${discount.toFixed(2)}
+                    </p>
+                  )}
+                </div>
 
-        {/* Proceed Button */}
-        <div className="mt-6">
-          {payment ? (
-            <button
-              onClick={handleProceedToOrder}
-              className="bg-green-500 text-white px-6 py-2 rounded-md w-full"
-            >
-              Proceed to Order
-            </button>
-          ) : (
-            <button
-              onClick={() => setOpen(true)}
-              className="bg-green-500 text-white px-6 py-2 rounded-md w-full"
-            >
-              Payment Checkout
-            </button>
-          )}
-        </div>
-        <Elements stripe={stripePromise}>
-          <CheckoutModal isOpen={open} setIsOpen={setOpen} />
-        </Elements>
-      </div>
+                <div className="divider"></div>
+
+                <div className="flex justify-between text-lg font-bold">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
+
+                <button className="btn btn-block btn-accent btn-soft mt-6">
+                  Proceed to Checkout
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
