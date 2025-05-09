@@ -1,14 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import ItemButton from "../components/shared/ItemButton";
 import TitleParagraph from "../components/shared/TitleParagraph";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Cart() {
-  const { state, actionClearCart } = useAuth();
+  const { state, actionClearCart, actionPlaceOrder } = useAuth();
 
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const navigate = useNavigate();
 
   const subtotal = state.cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -23,6 +25,23 @@ export default function Cart() {
     } else {
       setDiscount(0);
     }
+  };
+
+  const handlePlaceOrder = () => {
+    const newOrder = {
+      id: Date.now(),
+      user: state.user,
+      items: state.cartItems,
+      status: "pending",
+      createAt: new Date().toLocaleString("en-US", {
+        dateStyle: "short",
+        timeStyle: "short",
+        hour12: true,
+      }),
+    };
+    actionPlaceOrder(newOrder);
+    actionClearCart();
+    navigate("/");
   };
 
   return (
@@ -123,8 +142,11 @@ export default function Cart() {
                   <span>${total.toFixed(2)}</span>
                 </div>
 
-                <button className="btn btn-block btn-accent btn-soft mt-6">
-                  Proceed to Checkout
+                <button
+                  className="btn btn-block btn-accent btn-soft mt-6"
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
                 </button>
               </div>
             </div>
