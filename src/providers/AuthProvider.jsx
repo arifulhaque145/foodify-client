@@ -1,6 +1,7 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { createContext, useEffect, useReducer } from "react";
 import auth from "../firebase/firebase.init";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 export const AuthContext = createContext();
 
@@ -13,14 +14,10 @@ const initialState = {
 
 export const actionTypes = {
   login: "LOGIN",
-  register: "REGISTER",
   logout: "LOGOUT",
   loading: "SET_LOADING",
-  addToCart: "ADD_TO_CART",
-  removeFromCart: "REMOVE_FROM_CART",
-  clearCart: "CLEAR_CART",
-  updateQuantiy: "UPDATE_QUANTITY",
-  placeOrder: "PLACE_ORDER",
+  loadCart: "LOAD_CART",
+  loadOrders: "LOAD_ORDERS",
   updateOrderStatus: "UPDATE_ORDER_STATUS",
   cancelOrder: "CANCEL_ORDER",
 };
@@ -29,61 +26,18 @@ function authReducer(state, action) {
   switch (action.type) {
     case actionTypes.login:
       return { ...state, user: action.payload, loading: false };
-    case actionTypes.register:
-      return { ...state, user: action.payload, loading: false };
     case actionTypes.logout:
-      return { ...state, user: null, loading: false };
+      return {
+        ...state,
+        user: null,
+        loading: false,
+      };
     case actionTypes.loading:
       return { ...state, loading: true };
-    case actionTypes.addToCart: {
-      const existingItem = state.cartItems.find(
-        (item) => item.id === action.payload.id
-      );
-
-      if (existingItem) {
-        return {
-          ...state,
-          cartItems: state.cartItems.map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          cartItems: [...state.cartItems, { ...action.payload, quantity: 1 }],
-        };
-      }
-    }
-    case actionTypes.removeFromCart: {
-      return {
-        ...state,
-        cartItems: state.cartItems.filter((item) => item.id !== action.payload),
-      };
-    }
-    case actionTypes.clearCart: {
-      return {
-        ...state,
-        cartItems: [],
-      };
-    }
-    case actionTypes.updateQuantiy: {
-      return {
-        ...state,
-        cartItems: state.cartItems.map((item) =>
-          item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        ),
-      };
-    }
-    case actionTypes.placeOrder: {
-      return {
-        ...state,
-        orderItems: [...state.orderItems, action.payload],
-      };
-    }
+    case actionTypes.loadCart:
+      return { ...state, cartItems: [...action.payload] };
+    case actionTypes.loadOrders:
+      return { ...state, orderItems: [...action.payload] };
     default:
       return state;
   }
@@ -91,30 +45,69 @@ function authReducer(state, action) {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const axiosPublic = useAxiosPublic();
+
+  const fetchCart = async () => {
+    const res = await axiosPublic.get(`/cart-items?user=${state.user}`);
+    dispatch({ type: actionTypes.loadCart, payload: res.data });
+  };
+
+  const fetchOrder = async () => {
+    const res = await axiosPublic.get(`/order-items?user=${state.user}`);
+    dispatch({ type: actionTypes.loadOrders, payload: res.data });
+  };
 
   const actionUser = (email) => {
     dispatch({ type: actionTypes.login, payload: email });
   };
 
-  const actionAddToCart = (product) => {
-    dispatch({ type: actionTypes.addToCart, payload: product });
+  const actionAddToCart = async (product) => {
+    const res = await axiosPublic.get(`/cart-items?user=${product.user}`);
+    const cart = res.data;
+
+    const existingItem = cart.find((cartItem) => cartItem._id === product._id);
+
+    if (existingItem) {
+      await axiosPublic.patch(`/cart-items`, {
+        id: product._id,
+        quantity: existingItem.quantity + 1,
+        user: state.user,
+      });
+    } else {
+      await axiosPublic.post("/cart-items", {
+        ...product,
+        user: state.user,
+        quantity: 1,
+      });
+    }
   };
 
-  const actionRemoveFromCart = (id) => {
-    dispatch({ type: actionTypes.removeFromCart, payload: id });
+  const actionRemoveFromCart = async (id) => {
+    await axiosPublic.delete(`/cart-items/${id}`);
   };
 
-  const actionClearCart = () => {
-    dispatch({ type: actionTypes.clearCart });
+  const actionClearCart = async (id) => {
+    await axiosPublic.delete(`/cart-items-all/${id}`);
   };
 
-  const actionUpdateQuantity = (id, quantity) => {
-    dispatch({ type: actionTypes.updateQuantiy, payload: { id, quantity } });
+  const actionUpdateQuantity = async (itemId, itemQuantity) => {
+    await axiosPublic.patch(`/cart-items`, {
+      id: itemId,
+      quantity: itemQuantity,
+      user: state.user,
+    });
   };
 
-  const actionPlaceOrder = (order) => {
-    dispatch({ type: actionTypes.placeOrder, payload: order });
+  const actionPlaceOrder = async (order) => {
+    await axiosPublic.post(`/order-items/`, { ...order });
   };
+
+  useEffect(() => {
+    if (state.user) {
+      fetchCart();
+      fetchOrder();
+    }
+  }, [state]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {

@@ -26,7 +26,7 @@ export default function OrderItem({ order }) {
 
       <div className="mt-4 flex justify-between items-center">
         <p className="text-gray-400 italic">Created: {order.createAt}</p>
-        <ItemButton title="View Details" style="btn-success btn-outline" />
+        <ItemButton title="Cancel" style="btn-error btn-outline" />
       </div>
     </div>
   );

@@ -5,7 +5,8 @@ import ItemButtonLink from "./shared/ItemButtonLink";
 import TitleParagraph from "./shared/TitleParagraph";
 
 export default function MenuItem({ dish }) {
-  const { actionAddToCart } = useAuth();
+  const { state, actionAddToCart } = useAuth();
+
   return (
     <div
       key={dish.id}
@@ -33,7 +34,8 @@ export default function MenuItem({ dish }) {
               style="w-1/2 btn-soft btn-success mr-1"
               click={() =>
                 actionAddToCart({
-                  id: dish.id,
+                  _id: dish._id,
+                  user: state.user,
                   name: dish.name,
                   img: dish.image,
                   price: dish.price,
@@ -42,7 +44,7 @@ export default function MenuItem({ dish }) {
             />
             <ItemButtonLink
               title="Details"
-              link={`/details/${dish.id}`}
+              link={`/details/${dish._id}`}
               color="btn-success"
               outline="btn-outline"
               style="w-1/2"

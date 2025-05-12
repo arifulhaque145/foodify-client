@@ -2,7 +2,7 @@ import { signOut } from "firebase/auth";
 import React from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/foodify_icon.png";
 import auth from "../firebase/firebase.init";
 import { useAuth } from "../hooks/useAuth";
@@ -27,8 +27,12 @@ const SideButton = () => (
 
 function Navs() {
   const { state } = useAuth();
+  const navigate = useNavigate();
+
   const logout = () => {
     signOut(auth);
+    navigate("/");
+    window.location.reload();
   };
 
   return (

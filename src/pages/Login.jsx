@@ -47,7 +47,7 @@ export default function Login() {
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
 
-        <button className="btn btn-primary w-full" type="submit">
+        <button className="btn btn-success w-full" type="submit">
           Login
         </button>
       </form>

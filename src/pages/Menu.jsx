@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import MenuItem from "../components/MenuItem";
+import useMenu from "../hooks/useMenu";
 
 export default function Menu() {
-  const [foodData, setFoodData] = useState([]);
-  fetch("../../data.json")
-    .then((res) => res.json())
-    .then((data) => setFoodData(data));
+  const [menu] = useMenu();
+
   return (
     <div className="px-4 py-8">
       <div className="text-center mb-12">
@@ -19,8 +18,8 @@ export default function Menu() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {foodData.map((item) => (
-          <MenuItem dish={item} />
+        {menu.map((item) => (
+          <MenuItem key={item._id} dish={item} />
         ))}
       </div>
     </div>

@@ -29,9 +29,8 @@ export default function Cart() {
 
   const handlePlaceOrder = () => {
     const newOrder = {
-      id: Date.now(),
       user: state.user,
-      items: state.cartItems,
+      items: state.cartItems.map(({ user, ...rest }) => rest),
       status: "pending",
       createAt: new Date().toLocaleString("en-US", {
         dateStyle: "short",
@@ -40,13 +39,13 @@ export default function Cart() {
       }),
     };
     actionPlaceOrder(newOrder);
-    actionClearCart();
-    navigate("/");
+    actionClearCart(state.user);
+    navigate("/order");
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {state.cartItems.length === 0 ? (
+      {!state.user || state.cartItems.length === 0 ? (
         <p className="text-center text-4xl uppercase font-light">
           Your cart is empty.
         </p>
@@ -75,7 +74,7 @@ export default function Cart() {
                   </thead>
                   <tbody>
                     {state.cartItems.map((item) => (
-                      <CartItem key={item.id} item={item} />
+                      <CartItem key={item._id} item={item} />
                     ))}
                   </tbody>
                   <tbody>
@@ -88,7 +87,7 @@ export default function Cart() {
                         <ItemButton
                           title="Clear Cart"
                           style="btn-success btn-outline"
-                          click={actionClearCart}
+                          click={() => actionClearCart(state.user)}
                         />
                       </td>
                     </tr>
