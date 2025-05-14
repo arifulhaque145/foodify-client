@@ -1,11 +1,14 @@
 import React from "react";
+import useOrder from "../hooks/useOrder";
 import ItemButton from "./shared/ItemButton";
 
 export default function OrderItem({ order }) {
+  const { orders, orderCancel } = useOrder();
+
   return (
     <div className="card bg-base-200 shadow-lg p-4 mb-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold">Order ID: {order.id}</h2>
+        <h2 className="text-xl font-bold">Order ID: {order._id}</h2>
         <p
           className={`badge ${
             order.status === "Delivered" ? "badge-success" : "badge-warning"
@@ -26,7 +29,14 @@ export default function OrderItem({ order }) {
 
       <div className="mt-4 flex justify-between items-center">
         <p className="text-gray-400 italic">Created: {order.createAt}</p>
-        <ItemButton title="Cancel" style="btn-error btn-outline" />
+        <ItemButton
+          title="Cancel"
+          style="btn-error btn-outline"
+          click={() => {
+            orderCancel.mutate(order._id);
+            orders?.refetch();
+          }}
+        />
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import { signOut } from "firebase/auth";
-import React from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/foodify_icon.png";
-import auth from "../firebase/firebase.init";
-import { useAuth } from "../hooks/useAuth";
-import ItemButton from "./shared/ItemButton";
+import logo from "../../assets/foodify_icon.png";
+import auth from "../../firebase/firebase.init";
+import useAuth from "../../hooks/useAuth";
+import useCart from "../../hooks/useCart";
+import ItemButton from "./ItemButton";
 
 const SideButton = () => (
   <svg
@@ -28,12 +28,17 @@ const SideButton = () => (
 function Navs() {
   const { state } = useAuth();
   const navigate = useNavigate();
+  const { cartItems } = useCart();
 
   const logout = () => {
     signOut(auth);
     navigate("/");
     window.location.reload();
   };
+
+  if (cartItems?.isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="md:flex md:items-center">
@@ -46,11 +51,11 @@ function Navs() {
       <li>
         <Link to="/cart">
           <FaShoppingCart className="text-2xl text-gray-700" />
-          {!state.cartItems.length ? (
+          {!cartItems?.data?.length ? (
             ""
           ) : (
             <span className="badge badge-sm badge-accent absolute top-0 right-0">
-              {state.cartItems.length}
+              {cartItems?.data?.length}
             </span>
           )}
         </Link>

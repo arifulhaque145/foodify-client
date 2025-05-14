@@ -2,7 +2,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import auth from "../firebase/firebase.init";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 export default function Register() {
   const {
@@ -21,8 +21,6 @@ export default function Register() {
         data.password
       );
       await updateProfile(userCredential.user, { displayName: data.name });
-      // console.log(userCredential.user);
-
       actionCreateUser(data.email);
 
       navigate("/");

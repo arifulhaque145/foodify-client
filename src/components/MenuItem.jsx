@@ -1,11 +1,13 @@
 import React from "react";
-import { useAuth } from "../hooks/useAuth";
+import useAuth from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
 import ItemButton from "./shared/ItemButton";
 import ItemButtonLink from "./shared/ItemButtonLink";
 import TitleParagraph from "./shared/TitleParagraph";
 
 export default function MenuItem({ dish }) {
-  const { state, actionAddToCart } = useAuth();
+  const { state } = useAuth();
+  const { cartItems, addCartItem } = useCart();
 
   return (
     <div
@@ -32,19 +34,20 @@ export default function MenuItem({ dish }) {
             <ItemButton
               title="Add to cart"
               style="w-1/2 btn-soft btn-success mr-1"
-              click={() =>
-                actionAddToCart({
+              click={() => {
+                addCartItem.mutate({
                   _id: dish._id,
-                  user: state.user,
+                  user: state?.user,
                   name: dish.name,
                   img: dish.image,
                   price: dish.price,
-                })
-              }
+                });
+                cartItems.refetch();
+              }}
             />
             <ItemButtonLink
               title="Details"
-              link={`/details/${dish._id}`}
+              link={`/menu-details/${dish._id}`}
               color="btn-success"
               outline="btn-outline"
               style="w-1/2"

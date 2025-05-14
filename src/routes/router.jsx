@@ -5,6 +5,7 @@ import Cart from "../pages/Cart";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Menu from "../pages/Menu";
+import MenuDetails from "../pages/MenuDetails";
 import Order from "../pages/Order";
 import Register from "../pages/Register";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "menu",
         element: <Menu />,
+      },
+      {
+        path: "menu-details/:id",
+        element: <MenuDetails />,
       },
       {
         path: "cart",

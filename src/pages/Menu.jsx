@@ -3,7 +3,11 @@ import MenuItem from "../components/MenuItem";
 import useMenu from "../hooks/useMenu";
 
 export default function Menu() {
-  const [menu] = useMenu();
+  const { menuItems } = useMenu();
+
+  if (menuItems?.isLoading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className="px-4 py-8">
@@ -18,7 +22,7 @@ export default function Menu() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {menu.map((item) => (
+        {menuItems?.data?.map((item) => (
           <MenuItem key={item._id} dish={item} />
         ))}
       </div>

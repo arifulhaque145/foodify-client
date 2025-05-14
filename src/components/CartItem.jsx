@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import { useAuth } from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
 
 export default function CartItem({ item }) {
-  const { actionUpdateQuantity, actionRemoveFromCart } = useAuth();
   const [quantityValue, setQuantityValue] = useState(item.quantity);
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
 
   useEffect(() => {
-    actionUpdateQuantity(item._id, parseInt(quantityValue));
-  }, [quantityValue]);
+    updateQuantity.mutate({ id: item._id, quantity: parseInt(quantityValue) });
+  }, [item._id, updateQuantity, quantityValue]);
 
   return (
     <tr key={item.id}>
@@ -35,7 +35,10 @@ export default function CartItem({ item }) {
       <td>${(item.price * item.quantity).toFixed(2)}</td>
       <td className="text-center">
         <button
-          onClick={() => actionRemoveFromCart(item._id)}
+          onClick={() => {
+            removeFromCart.mutate(item._id);
+            cartItems?.refetch();
+          }}
           className="btn btn-sm btn-error"
         >
           <FiTrash2 />
