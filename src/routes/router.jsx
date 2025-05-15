@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
@@ -32,6 +33,8 @@ const router = createBrowserRouter([
       {
         path: "menu-details/:id",
         element: <MenuDetails />,
+        loader: ({ params }) =>
+          axios.get(`${BASE_URL}/food-items/${params.id}`),
       },
       {
         path: "cart",

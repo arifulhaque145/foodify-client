@@ -4,11 +4,14 @@ import useCart from "../hooks/useCart";
 
 export default function CartItem({ item }) {
   const [quantityValue, setQuantityValue] = useState(item.quantity);
-  const { cartItems, removeFromCart, updateQuantity } = useCart();
+  const { removeFromCart, updateQuantity } = useCart();
+  const { cartItems } = useCart();
 
   useEffect(() => {
-    updateQuantity.mutate({ id: item._id, quantity: parseInt(quantityValue) });
-  }, [item._id, updateQuantity, quantityValue]);
+    updateQuantity(item._id, parseInt(quantityValue)).then(() =>
+      cartItems.refetch()
+    );
+  }, [item._id, cartItems, updateQuantity, quantityValue]);
 
   return (
     <tr key={item.id}>
@@ -36,8 +39,7 @@ export default function CartItem({ item }) {
       <td className="text-center">
         <button
           onClick={() => {
-            removeFromCart.mutate(item._id);
-            cartItems?.refetch();
+            removeFromCart(item._id).then(() => cartItems.refetch());
           }}
           className="btn btn-sm btn-error"
         >

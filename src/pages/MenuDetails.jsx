@@ -1,24 +1,14 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import ItemButton from "../components/shared/ItemButton";
-import useAxiosPublic from "../hooks/useAxiosPublic";
 import useCart from "../hooks/useCart";
 
 export default function MenuDetails() {
-  const { id } = useParams();
-  const [menu, setMenu] = useState();
-  const axiosPublic = useAxiosPublic();
+  const { data } = useLoaderData();
+  const menu = data;
+
   const { cartItems, addCartItem } = useCart();
   const { state } = useState();
-
-  useEffect(() => {
-    const fetchOneItem = async () => {
-      const res = await axiosPublic.get(`/food-items/${id}`);
-      setMenu(res.data);
-    };
-
-    fetchOneItem();
-  }, [axiosPublic, id]);
 
   return (
     <div className="container mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">

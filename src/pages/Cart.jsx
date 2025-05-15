@@ -40,9 +40,8 @@ export default function Cart() {
   };
 
   const handlePlaceOrder = () => {
-    placeOrder.mutate(newOrder);
-    clearCart.mutate(state?.user);
-    cartItems?.refetch();
+    placeOrder(newOrder);
+    clearCart(state?.user).then(() => cartItems.refetch());
     !cartItems?.isLoading && navigate("/order");
   };
 
@@ -94,8 +93,7 @@ export default function Cart() {
                       title="Clear Cart"
                       style="btn-success btn-outline"
                       click={() => {
-                        clearCart.mutate(state?.user);
-                        cartItems?.refetch();
+                        clearCart(state?.user).then(() => cartItems.refetch());
                       }}
                     />
                   </td>

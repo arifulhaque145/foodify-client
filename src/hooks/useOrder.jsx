@@ -1,19 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import useAuth from "./useAuth";
 import useAxiosPublic from "./useAxiosPublic";
-
-const actionPlaceOrder = async ({ url, order }) => {
-  await url.post(`/order-items/`, { ...order });
-};
-
-const actionOrderCancel = async ({ url, id }) => {
-  await url.delete(`/order-items/${id}`);
-};
 
 export default function useOrder() {
   const axiosPublic = useAxiosPublic();
   const { state } = useAuth();
-  const queryClient = useQueryClient();
 
   const orders = useQuery({
     queryKey: ["order", state?.user],
@@ -23,35 +14,13 @@ export default function useOrder() {
     },
   });
 
-  const placeOrder = useMutation({
-    mutationFn: (orderItem) =>
-      actionPlaceOrder({
-        url: axiosPublic,
-        order: orderItem,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["cart"]);
-      console.log("Order placed successfully!");
-    },
-    onError: (error) => {
-      console.log("Error placing order: " + error.message);
-    },
-  });
+  const placeOrder = async (order) => {
+    await axiosPublic.post(`/order-items/`, { ...order });
+  };
 
-  const orderCancel = useMutation({
-    mutationFn: (orderId) =>
-      actionOrderCancel({
-        url: axiosPublic,
-        id: orderId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["cart"]);
-      console.log("Order canceled successfully!");
-    },
-    onError: (error) => {
-      console.log("Error canceling order: " + error.message);
-    },
-  });
+  const orderCancel = async (id) => {
+    await axiosPublic.delete(`/order-items/${id}`);
+  };
 
   return { orders, placeOrder, orderCancel };
 }

@@ -35,14 +35,13 @@ export default function MenuItem({ dish }) {
               title="Add to cart"
               style="w-1/2 btn-soft btn-success mr-1"
               click={() => {
-                addCartItem.mutate({
+                addCartItem({
                   _id: dish._id,
                   user: state?.user,
                   name: dish.name,
                   img: dish.image,
                   price: dish.price,
-                });
-                cartItems.refetch();
+                }).then(() => cartItems.refetch());
               }}
             />
             <ItemButtonLink

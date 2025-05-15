@@ -32,10 +32,7 @@ export default function OrderItem({ order }) {
         <ItemButton
           title="Cancel"
           style="btn-error btn-outline"
-          click={() => {
-            orderCancel.mutate(order._id);
-            orders?.refetch();
-          }}
+          click={() => orderCancel(order._id).then(() => orders.refetch())}
         />
       </div>
     </div>
