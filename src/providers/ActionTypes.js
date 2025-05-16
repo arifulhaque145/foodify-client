@@ -6,4 +6,5 @@ export const actionTypes = {
   login: "LOGIN",
   logout: "LOGOUT",
   loading: "LOADING",
+  googleLoading: "GOOGLE_LOADING",
 };

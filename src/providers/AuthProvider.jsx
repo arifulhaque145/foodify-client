@@ -6,6 +6,7 @@ import { actionTypes, AuthContext } from "./ActionTypes";
 const initialState = {
   user: null,
   loading: false,
+  googleLogin: false,
 };
 
 function actionReducer(state, action) {
@@ -20,6 +21,8 @@ function actionReducer(state, action) {
       };
     case actionTypes.loading:
       return { ...state, loading: action.payload };
+    case actionTypes.googleLoading:
+      return { ...state, loading: action.payload };
     default:
       return state;
   }
@@ -33,6 +36,10 @@ export function AuthProvider({ children }) {
   };
 
   const setLoading = (state) => {
+    dispatch({ type: actionTypes.loading, payload: state });
+  };
+
+  const setGoogleLoading = (state) => {
     dispatch({ type: actionTypes.loading, payload: state });
   };
 
@@ -51,6 +58,7 @@ export function AuthProvider({ children }) {
   const actions = {
     actionUser,
     setLoading,
+    setGoogleLoading,
   };
 
   return (

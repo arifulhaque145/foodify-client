@@ -1,12 +1,27 @@
-# React + Vite
+# 🍔 Foodify - A Delicious Food Delivery Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Foodify is a full-featured food delivery website where users can browse a variety of delicious dishes, add items to their cart, and securely place orders. Built using React, Firebase, Tailwind CSS, DaisyUI, and Framer Motion, Foodify delivers a smooth and visually appealing user experience.
 
-Currently, two official plugins are available:
+## 🚀 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[Foodify Live Demo](YOUR_LIVE_WEBSITE_LINK_HERE)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📌 Features
+
+- 🔐 **Authentication System:** User registration, login, and logout using Firebase.
+- 🛒 **Cart Functionality:** Add, update, and remove items from the cart.
+- 🍽️ **Product Listing:** 50+ food items with categories and descriptions.
+- 📜 **Responsive Design:** Optimized for all screen sizes with Tailwind CSS.
+- 🎥 **Smooth Animations:** Enhanced user experience with Framer Motion.
+- 💳 **Secure Payment Gateway:** Easy and secure payment process.
+- 📊 **Dashboard:** Admin dashboard to manage products and orders.
+
+---
+
+## ⚡️ Tech Stack
+
+- **Frontend:** React, React Router DOM, Context API, Tailwind CSS, DaisyUI, Framer Motion
+- **Backend:** Firebase Authentication, Firebase Realtime Database
+- **Deployment:** Firebase Hosting / Vercel

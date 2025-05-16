@@ -86,7 +86,7 @@ export default function Register() {
       </p>
       <div className="divider" />
       <p className="mb-4 text-center text-slate-500">Or Login with Google</p>
-      {!state?.loading ? <GoogleButton /> : <LoadingButton />}
+      {!state?.googleLoading ? <GoogleButton /> : <LoadingButton />}
     </div>
   );
 }
