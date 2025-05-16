@@ -4,7 +4,7 @@ Foodify is a full-featured food delivery website where users can browse a variet
 
 ## 🚀 Live Demo
 
-[Foodify Live Demo](YOUR_LIVE_WEBSITE_LINK_HERE)
+[Foodify Live Demo](www.google.com)
 
 ---
 
