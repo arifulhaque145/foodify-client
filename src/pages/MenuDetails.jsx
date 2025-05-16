@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ItemButton from "../components/shared/ItemButton";
 import useCart from "../hooks/useCart";
+import useMenu from "../hooks/useMenu";
 
 export default function MenuDetails() {
-  const { data } = useLoaderData();
-  const menu = data;
-
-  const { cartItems, addCartItem } = useCart();
+  const { id } = useParams();
   const { state } = useState();
+  const { cartItems, addCartItem } = useCart();
+  const { menuItems } = useMenu();
+  const navigate = useNavigate();
+
+  const menu = menuItems?.data?.find((item) => item._id === id);
 
   return (
     <div className="container mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">
@@ -30,14 +33,9 @@ export default function MenuDetails() {
           title="Add to cart"
           style="w-1/2 btn-soft btn-success mr-1"
           click={() => {
-            addCartItem.mutate({
-              _id: menu._id,
-              user: state?.user,
-              name: menu.name,
-              img: menu.image,
-              price: menu.price,
-            });
-            cartItems.refetch();
+            state?.user
+              ? addCartItem(menu).then(() => cartItems.refetch())
+              : navigate("/login");
           }}
         />
       </div>

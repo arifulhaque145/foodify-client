@@ -15,10 +15,12 @@ export default function useCart() {
   });
 
   const addCartItem = async (product) => {
-    const res = await axiosPublic.get(`/cart-items?user=${product.user}`);
+    const res = await axiosPublic.get(`/cart-items?user=${state?.user}`);
     const existingItem = res?.data?.find(
       (cartItem) => cartItem._id === product._id
     );
+
+    const { id, catagory, description, ...rest } = product;
 
     if (existingItem) {
       await axiosPublic.patch(`/cart-items/${existingItem._id}`, {
@@ -26,7 +28,8 @@ export default function useCart() {
       });
     } else {
       await axiosPublic.post("/cart-items", {
-        ...product,
+        ...rest,
+        user: state?.user,
         quantity: 1,
       });
     }

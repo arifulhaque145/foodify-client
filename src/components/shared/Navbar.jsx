@@ -7,6 +7,7 @@ import auth from "../../firebase/firebase.init";
 import useAuth from "../../hooks/useAuth";
 import useCart from "../../hooks/useCart";
 import ItemButton from "./ItemButton";
+import Loader from "./Loader";
 
 const SideButton = () => (
   <svg
@@ -37,7 +38,7 @@ function Navs() {
   };
 
   if (cartItems?.isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   return (

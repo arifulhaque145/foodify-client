@@ -1,8 +1,11 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import GoogleButton from "../components/shared/GoogleButton";
+import LoadingButton from "../components/shared/LoadingButton";
 import auth from "../firebase/firebase.init";
 import useAuth from "../hooks/useAuth";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 export default function Register() {
   const {
@@ -11,9 +14,11 @@ export default function Register() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { actionCreateUser } = useAuth();
+  const { state, actionUser, setLoading } = useAuth();
+  const axiosPublic = useAxiosPublic();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -21,8 +26,9 @@ export default function Register() {
         data.password
       );
       await updateProfile(userCredential.user, { displayName: data.name });
-      actionCreateUser(data.email);
-
+      await axiosPublic.post("/users/register", data);
+      setLoading(false);
+      actionUser(data.email);
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error.message);
@@ -31,7 +37,7 @@ export default function Register() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Create an account</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input
           type="text"
@@ -64,11 +70,23 @@ export default function Register() {
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
-
-        <button className="btn btn-success w-full" type="submit">
-          Register
-        </button>
+        {!state?.loading ? (
+          <button className="btn btn-success w-full" type="submit">
+            Register Now
+          </button>
+        ) : (
+          <LoadingButton />
+        )}
       </form>
+      <p className="mt-4 text-center text-slate-500">
+        Already have an account? Please{" "}
+        <Link className="underline" to="/login">
+          Login
+        </Link>
+      </p>
+      <div className="divider" />
+      <p className="mb-4 text-center text-slate-500">Or Login with Google</p>
+      {!state?.loading ? <GoogleButton /> : <LoadingButton />}
     </div>
   );
 }

@@ -1,13 +1,12 @@
 import React from "react";
 import MenuItem from "../components/MenuItem";
+import Loader from "../components/shared/Loader";
 import useMenu from "../hooks/useMenu";
 
 export default function Menu() {
   const { menuItems } = useMenu();
 
-  if (menuItems?.isLoading) {
-    return <h1>Loading...</h1>;
-  }
+  if (menuItems?.isLoading) return <Loader />;
 
   return (
     <div className="px-4 py-8">

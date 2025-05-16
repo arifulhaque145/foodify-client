@@ -5,7 +5,7 @@ import { actionTypes, AuthContext } from "./ActionTypes";
 
 const initialState = {
   user: null,
-  loading: true,
+  loading: false,
 };
 
 function actionReducer(state, action) {
@@ -19,7 +19,7 @@ function actionReducer(state, action) {
         loading: false,
       };
     case actionTypes.loading:
-      return { ...state, loading: true };
+      return { ...state, loading: action.payload };
     default:
       return state;
   }
@@ -30,6 +30,10 @@ export function AuthProvider({ children }) {
 
   const actionUser = (email) => {
     dispatch({ type: actionTypes.login, payload: email });
+  };
+
+  const setLoading = (state) => {
+    dispatch({ type: actionTypes.loading, payload: state });
   };
 
   useEffect(() => {
@@ -46,6 +50,7 @@ export function AuthProvider({ children }) {
 
   const actions = {
     actionUser,
+    setLoading,
   };
 
   return (

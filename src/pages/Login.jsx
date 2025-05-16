@@ -1,6 +1,8 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import GoogleButton from "../components/shared/GoogleButton";
+import LoadingButton from "../components/shared/LoadingButton";
 import auth from "../firebase/firebase.init";
 import useAuth from "../hooks/useAuth";
 
@@ -11,12 +13,14 @@ export default function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { actionUser } = useAuth();
+  const { state, setLoading, actionUser } = useAuth();
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
       actionUser(data.email);
+      setLoading(false);
       navigate("/");
     } catch (error) {
       console.error("Login error:", error.message);
@@ -36,7 +40,6 @@ export default function Login() {
         {errors.email && (
           <p className="text-red-500 text-sm">{errors.email.message}</p>
         )}
-
         <input
           type="password"
           placeholder="Password"
@@ -46,11 +49,23 @@ export default function Login() {
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
-
-        <button className="btn btn-success w-full" type="submit">
-          Login
-        </button>
+        {!state?.loading ? (
+          <button className="btn btn-success w-full" type="submit">
+            Login
+          </button>
+        ) : (
+          <LoadingButton />
+        )}
       </form>
+      <p className="mt-4 text-center text-slate-500">
+        Not an account? Please{" "}
+        <Link className="underline" to="/register">
+          Register
+        </Link>
+      </p>
+      <div className="divider" />
+      <p className="mb-4 text-center text-slate-500">Or Login with Google</p>
+      {!state?.loading ? <GoogleButton /> : <LoadingButton />}
     </div>
   );
 }

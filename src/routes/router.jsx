@@ -1,4 +1,3 @@
-import axios from "axios";
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
@@ -9,6 +8,7 @@ import Menu from "../pages/Menu";
 import MenuDetails from "../pages/MenuDetails";
 import Order from "../pages/Order";
 import Register from "../pages/Register";
+import PrivateRouter from "./PrivateRouter";
 
 export const BASE_URL = import.meta.env.VITE_URL;
 
@@ -28,17 +28,23 @@ const router = createBrowserRouter([
       },
       {
         path: "menu",
-        element: <Menu />,
+        element: (
+          <PrivateRouter>
+            <Menu />
+          </PrivateRouter>
+        ),
       },
       {
         path: "menu-details/:id",
         element: <MenuDetails />,
-        loader: ({ params }) =>
-          axios.get(`${BASE_URL}/food-items/${params.id}`),
       },
       {
         path: "cart",
-        element: <Cart />,
+        element: (
+          <PrivateRouter>
+            <Cart />
+          </PrivateRouter>
+        ),
       },
       {
         path: "login",
@@ -50,7 +56,11 @@ const router = createBrowserRouter([
       },
       {
         path: "order",
-        element: <Order />,
+        element: (
+          <PrivateRouter>
+            <Order />
+          </PrivateRouter>
+        ),
       },
     ],
   },

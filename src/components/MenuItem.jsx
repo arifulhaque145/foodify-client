@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
 import ItemButton from "./shared/ItemButton";
@@ -6,8 +7,9 @@ import ItemButtonLink from "./shared/ItemButtonLink";
 import TitleParagraph from "./shared/TitleParagraph";
 
 export default function MenuItem({ dish }) {
-  const { state } = useAuth();
   const { cartItems, addCartItem } = useCart();
+  const { state } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -16,7 +18,7 @@ export default function MenuItem({ dish }) {
     >
       <figure>
         <img
-          src={dish.image}
+          src={dish.img}
           alt={dish.name}
           className="h-48 w-full object-cover"
         />
@@ -35,13 +37,9 @@ export default function MenuItem({ dish }) {
               title="Add to cart"
               style="w-1/2 btn-soft btn-success mr-1"
               click={() => {
-                addCartItem({
-                  _id: dish._id,
-                  user: state?.user,
-                  name: dish.name,
-                  img: dish.image,
-                  price: dish.price,
-                }).then(() => cartItems.refetch());
+                state?.user
+                  ? addCartItem(dish).then(() => cartItems.refetch())
+                  : navigate("/login");
               }}
             />
             <ItemButtonLink

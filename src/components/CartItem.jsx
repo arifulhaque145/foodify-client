@@ -14,7 +14,7 @@ export default function CartItem({ item }) {
   }, [item._id, cartItems, updateQuantity, quantityValue]);
 
   return (
-    <tr key={item.id}>
+    <tr key={item._id}>
       <td className="flex items-center gap-4">
         <img
           src={item.img}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
 import ItemButton from "../components/shared/ItemButton";
+import Loader from "../components/shared/Loader";
 import TitleParagraph from "../components/shared/TitleParagraph";
 import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
@@ -46,10 +47,13 @@ export default function Cart() {
   };
 
   if (cartItems?.isLoading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
-  if (!state?.user || cartItems?.data?.length === 0) {
+  if (
+    (!cartItems?.isLoading && !state?.user) ||
+    cartItems?.data?.length === 0
+  ) {
     return (
       <div className="container mx-auto px-4 py-8">
         <p className="text-center text-4xl uppercase font-light">
