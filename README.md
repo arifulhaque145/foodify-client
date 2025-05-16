@@ -15,8 +15,6 @@ Foodify is a full-featured food delivery website where users can browse a variet
 - 🍽️ **Product Listing:** 50+ food items with categories and descriptions.
 - 📜 **Responsive Design:** Optimized for all screen sizes with Tailwind CSS.
 - 🎥 **Smooth Animations:** Enhanced user experience with Framer Motion.
-- 💳 **Secure Payment Gateway:** Easy and secure payment process.
-- 📊 **Dashboard:** Admin dashboard to manage products and orders.
 
 ---
 
