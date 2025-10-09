@@ -1,7 +1,8 @@
-import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import DashboardLayout from "../layouts/DashboardLayout";
 import MainLayout from "../layouts/MainLayout";
 import Cart from "../pages/Cart";
+import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import Menu from "../pages/Menu";
@@ -61,6 +62,21 @@ const router = createBrowserRouter([
             <Order />
           </PrivateRouter>
         ),
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    errorElement: (
+      <div className="h-screen flex justify-center items-center">
+        <h1 className="text-5xl font-thin">404 Not Found</h1>
+      </div>
+    ),
+    children: [
+      {
+        path: "admin",
+        element: <AdminDashboard />,
       },
     ],
   },

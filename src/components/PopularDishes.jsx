@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import MenuItem from "./MenuItem";
+import MenuItem from "../components/menu/MenuItem";
 import TitleParagraph from "./shared/TitleParagraph";
 
 const CARD_WIDTH = 300; // px

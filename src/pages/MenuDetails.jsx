@@ -25,13 +25,15 @@ export default function MenuDetails() {
       <div className="flex-1">
         <h1 className="text-3xl font-bold mb-2">{menu?.name}</h1>
         <p className="text-lg text-gray-500 mb-4">{menu?.category}</p>
-        <p className="text-2xl font-semibold text-accent mb-4">
+        <p className="text-2xl dark:text-gray-300 font-semibold text-gray-700 mb-4">
           ${menu?.price}
         </p>
-        <p className="text-gray-700 mb-4">{menu?.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          {menu?.description}
+        </p>
         <ItemButton
           title="Add to cart"
-          style="w-1/2 btn-soft btn-success mr-1"
+          style="w-1/2 btn-error btn-outline dark:btn-success mr-1"
           click={() => {
             state?.user
               ? addCartItem(menu).then(() => cartItems.refetch())

@@ -7,7 +7,8 @@ import auth from "../../firebase/firebase.init";
 import useAuth from "../../hooks/useAuth";
 import useCart from "../../hooks/useCart";
 import ItemButton from "./ItemButton";
-import Loader from "./Loader";
+import ItemButtonLink from "./ItemButtonLink";
+import ThemeController from "./ThemeController";
 
 const SideButton = () => (
   <svg
@@ -26,82 +27,82 @@ const SideButton = () => (
   </svg>
 );
 
-function Navs() {
-  const { state } = useAuth();
-  const navigate = useNavigate();
-  const { cartItems } = useCart();
+const Authenticated = ({ logout }) => (
+  <>
+    <li className="hover:bg-red-100 hover:rounded">
+      <Link to="/dashboard/admin">
+        <FaUserCircle className="text-3xl text-red-400 hover:text-red-600" />
+      </Link>
+    </li>
+    <li>
+      <ItemButton
+        title="Logout"
+        style="btn-secondary btn-outline"
+        icon={<FiLogOut />}
+        click={logout}
+      />
+    </li>
+  </>
+);
 
-  const logout = () => {
-    signOut(auth);
-    navigate("/");
-    window.location.reload();
-  };
+const Guest = () => (
+  <>
+    <li className="md:mx-3">
+      <ItemButtonLink
+        title="Login"
+        link="/login"
+        outline="btn-error btn-outline"
+      />
+    </li>
+    <li>
+      <ItemButtonLink
+        title="Register"
+        link="/register"
+        outline="btn-error btn-error text-white"
+      />
+    </li>
+  </>
+);
 
-  if (cartItems?.isLoading) {
-    return <Loader />;
-  }
+function Navs({ handleLogout, data = {} }) {
+  const navStyle =
+    "hover:bg-red-100 hover:rounded text-red-500 hover:text-red-600";
 
   return (
-    <div className="md:flex md:items-center">
-      <li>
+    <div className="md:flex md:items-center md:gap-4">
+      <li className={navStyle}>
         <Link to="/">Home</Link>
       </li>
-      <li>
+      <li className={navStyle}>
         <Link to="/menu">Menu</Link>
       </li>
-      <li>
+      <li className="relative hover:bg-red-100 hover:rounded">
         <Link to="/cart">
-          <FaShoppingCart className="text-2xl text-gray-700" />
-          {!cartItems?.data?.length ? (
-            ""
-          ) : (
-            <span className="badge badge-sm badge-accent absolute top-0 right-0">
-              {cartItems?.data?.length}
+          <FaShoppingCart className="text-2xl text-red-400 hover:text-red-600" />
+          {data?.itemLength > 0 && (
+            <span className="badge badge-sm badge-accent absolute -top-2 -right-2">
+              {data.itemLength}
             </span>
           )}
         </Link>
       </li>
-      {state.user ? (
-        <>
-          <li>
-            <Link to="/order">
-              <FaUserCircle className="text-3xl hover:text-blue-600" />
-            </Link>
-          </li>
-          <li>
-            <ItemButton
-              title="Logout"
-              style="btn-secondary btn-outline"
-              icon={<FiLogOut />}
-              click={logout}
-            />
-          </li>
-        </>
-      ) : (
-        <>
-          <li className="md: mx-3">
-            <Link
-              className="px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-600 hover:text-white transition duration-300"
-              to="/login"
-            >
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-              to="/register"
-            >
-              Register
-            </Link>
-          </li>
-        </>
-      )}
+      {data?.user ? <Authenticated logout={handleLogout} /> : <Guest />}
     </div>
   );
 }
 
 export default function Navbar() {
+  const { state } = useAuth();
+  const navigate = useNavigate();
+  const { cartItems } = useCart();
+
+  console.log(state);
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    navigate("/");
+  };
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 navbar bg-base-100 shadow-md">
       <div className="flex-1">
@@ -112,20 +113,28 @@ export default function Navbar() {
       </div>
 
       <div className="flex-none">
+        {/* Desktop menu */}
         <ul className="menu menu-horizontal px-1 hidden md:flex lg:mr-4">
-          <Navs />
+          <Navs
+            handleLogout={handleLogout}
+            data={{ itemLength: cartItems?.data?.length, user: state?.user }}
+          />
+          <ThemeController />
         </ul>
 
         {/* Mobile dropdown */}
         <div className="dropdown dropdown-end md:hidden">
-          <label tabI ndex={0} className="btn btn-ghost">
+          <label tabIndex={0} className="btn btn-ghost">
             <SideButton />
           </label>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
-            <Navs />
+            <Navs
+              handleLogout={handleLogout}
+              data={{ itemLength: cartItems?.data?.length, user: state?.user }}
+            />
           </ul>
         </div>
       </div>

@@ -28,8 +28,8 @@ export default function Login() {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+    <div className="p-12 mt-36 max-w-md mx-auto border border-gray-400 rounded shadow-md">
+      <h2 className="text-2xl font-bold mb-12 text-center">Login</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input
           type="email"
@@ -50,7 +50,7 @@ export default function Login() {
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
         {!state?.loading ? (
-          <button className="btn btn-success w-full" type="submit">
+          <button className="btn btn-error text-white w-full" type="submit">
             Login
           </button>
         ) : (
@@ -64,7 +64,7 @@ export default function Login() {
         </Link>
       </p>
       <div className="divider" />
-      <p className="mb-4 text-center text-slate-500">Or Login with Google</p>
+      <p className="mb-4 text-center text-slate-500">Or</p>
       {!state?.googleLoading ? <GoogleButton /> : <LoadingButton />}
     </div>
   );
