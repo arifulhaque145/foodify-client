@@ -1,13 +1,31 @@
-import { useState } from "react";
-import { IoFilter } from "react-icons/io5";
+import { useEffect, useState } from "react";
+import { RiEqualizerFill } from "react-icons/ri";
 import MenuItem from "../components/menu/MenuItem";
 import SearchBar from "../components/menu/SearchBar";
 import Loader from "../components/shared/Loader";
+import TitleParagraph from "../components/shared/TitleParagraph";
 import useMenu from "../hooks/useMenu";
+import { processMenu } from "../utils/menu";
 
 export default function Menu() {
   const { menuItems } = useMenu();
-  const [menu, setMenu] = useState(menuItems?.data);
+  const [menu, setMenu] = useState([]);
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("");
+  const [filterBy, setFilterBy] = useState("");
+  const [isAsc, setIsAsc] = useState(true);
+
+  useEffect(() => {
+    if (menuItems?.data) {
+      const processed = processMenu(menuItems.data, {
+        search,
+        sortBy,
+        filterBy,
+        isAsc,
+      });
+      setMenu(processed);
+    }
+  }, [menuItems, search, sortBy, filterBy, isAsc]);
 
   if (menuItems?.isLoading) return <Loader />;
 
@@ -15,32 +33,49 @@ export default function Menu() {
   if (menu?.length === 0) {
     menuContent = <p className="text-center text-2xl">No Menu Found</p>;
   } else {
-    menuContent = (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {menu?.map((item) => (
-          <MenuItem key={item._id} dish={item} />
-        ))}
-      </div>
-    );
+    menuContent = menu?.map((item) => <MenuItem key={item._id} dish={item} />);
   }
 
   return (
     <div className="px-4 py-8">
-      <div className="text-center mb-12">
-        <h1 className="text-3xl font-bold mb-4">All Food Items Are Here</h1>
-        {/* <p className="text-sm text-gray-600 my-8">
-          Discover a variety of delicious food items to satisfy your cravings.
-          From juicy burgers to authentic pizzas, <br /> we have something for
-          everyone.
-        </p> */}
-        <div className="my-12 flex gap-2 justify-center items-center">
-          <SearchBar menu={menu} setMenu={setMenu} />
-          <div className="btn btn-ghost">
-            <IoFilter className="text-2xl text-gray-400" />
+      <div className="text-center">
+        <TitleParagraph
+          title="All Food Items Are Here"
+          paragraph="Find your delicious food item in here"
+          titleStyle="text-4xl font-extrabold text-center"
+          paraStyle="text-center font-light text-gray-500 py-4"
+        />
+        {/* Search */}
+        <div className="w-full">
+          <div className="my-4 flex gap-2 justify-center">
+            <SearchBar search={search} setSearch={setSearch} />
           </div>
         </div>
       </div>
-      {menuContent}
+
+      <div
+        className="flex items-center gap-2 text-xl text-gray-600 mb-4"
+        onClick={() => {
+          setSortBy("name");
+          setIsAsc(!isAsc);
+        }}
+      >
+        <RiEqualizerFill />
+        <p className="font-bold">Filter & Refine</p>
+      </div>
+
+      {/* Item List */}
+      <div className="flex gap-1">
+        <div className="w-1/3">
+          <p>Name</p>
+          <p>Name</p>
+          <p>Name</p>
+          <p>Name</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {menuContent}
+        </div>
+      </div>
     </div>
   );
 }

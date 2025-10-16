@@ -1,4 +1,5 @@
 import { signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,7 +9,7 @@ import useAuth from "../../hooks/useAuth";
 import useCart from "../../hooks/useCart";
 import ItemButton from "./ItemButton";
 import ItemButtonLink from "./ItemButtonLink";
-import ThemeController from "./ThemeController";
+// import ThemeController from "./ThemeController";
 
 const SideButton = () => (
   <svg
@@ -27,17 +28,23 @@ const SideButton = () => (
   </svg>
 );
 
-const Authenticated = ({ logout }) => (
+const Authenticated = ({ logout, scrolled }) => (
   <>
-    <li className="hover:bg-red-100 hover:rounded">
+    <li className="">
       <Link to="/dashboard/admin">
-        <FaUserCircle className="text-3xl text-red-400 hover:text-red-600" />
+        <FaUserCircle
+          className={`text-red-400 hover:text-red-600 ${
+            scrolled ? "text-3xl" : "text-xl"
+          } transition-all duration-300`}
+        />
       </Link>
     </li>
     <li>
       <ItemButton
         title="Logout"
-        style="btn-secondary btn-outline"
+        style={`btn btn-error text-white transition-all duration-300 ${
+          scrolled ? "w-32" : "w-20"
+        }`}
         icon={<FiLogOut />}
         click={logout}
       />
@@ -45,28 +52,31 @@ const Authenticated = ({ logout }) => (
   </>
 );
 
-const Guest = () => (
+const Guest = ({ scrolled }) => (
   <>
     <li className="md:mx-3">
       <ItemButtonLink
         title="Login"
         link="/login"
-        outline="btn-error btn-outline"
+        outline={`btn-error btn-outline transition-all duration-300 ${
+          scrolled ? "w-32" : "w-20"
+        }`}
       />
     </li>
     <li>
       <ItemButtonLink
         title="Register"
         link="/register"
-        outline="btn-error btn-error text-white"
+        outline={`btn-error text-white transition-all duration-300 ${
+          scrolled ? "w-32" : "w-20"
+        }`}
       />
     </li>
   </>
 );
 
-function Navs({ handleLogout, data = {} }) {
-  const navStyle =
-    "hover:bg-red-100 hover:rounded text-red-500 hover:text-red-600";
+function Navs({ handleLogout, data = {}, scrolled }) {
+  const navStyle = `text-md hover:text-red-600 transition-all duration-300`;
 
   return (
     <div className="md:flex md:items-center md:gap-4">
@@ -76,27 +86,44 @@ function Navs({ handleLogout, data = {} }) {
       <li className={navStyle}>
         <Link to="/menu">Menu</Link>
       </li>
-      <li className="relative hover:bg-red-100 hover:rounded">
+      <li className="relative">
         <Link to="/cart">
-          <FaShoppingCart className="text-2xl text-red-400 hover:text-red-600" />
+          <FaShoppingCart
+            className={`text-red-400 hover:text-red-600 ${
+              scrolled ? "text-2xl" : "text-xl"
+            } transition-all duration-300`}
+          />
           {data?.itemLength > 0 && (
-            <span className="badge badge-sm badge-accent absolute -top-2 -right-2">
+            <span className="badge badge-sm badge-accent absolute -top-2 -right-2 rounded-full w-6 h-6 flex items-center justify-center text-white font-extrabold">
               {data.itemLength}
             </span>
           )}
         </Link>
       </li>
-      {data?.user ? <Authenticated logout={handleLogout} /> : <Guest />}
+      {data?.user ? (
+        <Authenticated logout={handleLogout} scrolled={scrolled} />
+      ) : (
+        <Guest scrolled={scrolled} />
+      )}
     </div>
   );
 }
 
 export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const { state } = useAuth();
   const navigate = useNavigate();
   const { cartItems } = useCart();
-
-  console.log(state);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -104,22 +131,33 @@ export default function Navbar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 navbar bg-base-100 shadow-md">
+    <div
+      className={`fixed top-0 left-0 right-0 z-50 navbar transition-all duration-500 bg-base-100 text-red-400 shadow-md px-4`}
+    >
       <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl text-red-500">
-          <img src={logo} alt="Logo" className="w-20 h-auto" />
-          <span className="text-2xl font-bold">FOODIFY</span>
+        <Link to="/" className="flex items-center gap-2 text-xl">
+          <img
+            src={logo}
+            alt="Logo"
+            className={`${
+              scrolled ? "w-12" : "w-8"
+            } h-auto  transition-all duration-300`}
+          />
+          <span className={`text-md font-medium  transition-all duration-300`}>
+            FOODIFY
+          </span>
         </Link>
       </div>
 
       <div className="flex-none">
         {/* Desktop menu */}
-        <ul className="menu menu-horizontal px-1 hidden md:flex lg:mr-4">
+        <ul className="menu menu-horizontal px-1 hidden md:flex">
           <Navs
             handleLogout={handleLogout}
             data={{ itemLength: cartItems?.data?.length, user: state?.user }}
+            scrolled={scrolled}
           />
-          <ThemeController />
+          {/* <ThemeController /> */}
         </ul>
 
         {/* Mobile dropdown */}

@@ -1,35 +1,58 @@
-export default function Testimonials() {
-  const reviews = [
-    {
-      id: 1,
-      name: "Sarah M.",
-      review:
-        "This app is a game changer! My food arrives hot and fast every time. Love it!",
-      avatar: "https://i.pravatar.cc/100?img=47",
-    },
-    {
-      id: 2,
-      name: "James L.",
-      review:
-        "Super easy to use and the dishes are always delicious. Highly recommend!",
-      avatar: "https://i.pravatar.cc/100?img=32",
-    },
-    {
-      id: 3,
-      name: "Ayesha K.",
-      review:
-        "Affordable meals, great customer service, and fast delivery. What more could I ask for?",
-      avatar: "https://i.pravatar.cc/100?img=12",
-    },
-  ];
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import TitleParagraph from "./shared/TitleParagraph";
 
+export default function Testimonials() {
   return (
     <section className="py-16 bg-base-200 text-base-content">
-      <div className="max-w-6xl mx-auto px-4 text-center">
-        <h2 className="text-3xl font-bold mb-6">What Our Customers Say</h2>
-        <p className="mb-10 text-lg">Real stories from happy food lovers</p>
+      <div className="relative max-w-7xl mx-auto px-4 text-center">
+        <TitleParagraph
+          title="What Our Customers Say"
+          paragraph="Real stories from happy food lovers"
+          titleStyle="text-4xl font-extrabold text-center"
+          paraStyle="text-center font-light text-gray-500 py-4"
+        />
+        <div className="mb-8"></div>
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={30}
+          slidesPerView={3.5}
+          navigation={{
+            nextEl: ".custom-next-testimonial",
+            prevEl: ".custom-prev-testimonial",
+          }}
+          watchOverflow={true}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
+          className="flex gap-4 !p-8"
+        >
+          {reviews.map((user) => (
+            <SwiperSlide
+              key={user.id}
+              className="card bg-white shadow-xl p-6 rounded-lg hover:shadow-2xl transition"
+            >
+              <div className="flex flex-col items-center">
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-20 h-20 rounded-full mb-4"
+                />
+                <p className="text-gray-700 mb-4 italic">“{user.review}”</p>
+                <h4 className="font-bold text-lg">{user.name}</h4>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <button className="custom-prev-testimonial absolute top-1/2 -left-6 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
+          <FaChevronLeft />
+        </button>
+        <button className="custom-next-testimonial absolute top-1/2 -right-6 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
+          <FaChevronRight />
+        </button>
+
+        {/* <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((user) => (
             <div
               key={user.id}
@@ -46,8 +69,59 @@ export default function Testimonials() {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </section>
   );
 }
+
+const reviews = [
+  {
+    id: 1,
+    name: "James L.",
+    review:
+      "This app is a game changer! My food arrives hot and fast every time. Love it!",
+    avatar: "https://i.pravatar.cc/100?img=12",
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: "David R.",
+    review:
+      "Super easy to use and the dishes are always delicious. Highly recommend!",
+    avatar: "https://i.pravatar.cc/100?img=51",
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: "Michael B.",
+    review:
+      "Affordable meals, great customer service, and fast delivery. What more could I ask for?",
+    avatar: "https://i.pravatar.cc/100?img=52",
+    rating: 4,
+  },
+  {
+    id: 4,
+    name: "Daniel K.",
+    review:
+      "The interface is clean and simple. Ordering food has never been this easy.",
+    avatar: "https://i.pravatar.cc/100?img=56",
+    rating: 5,
+  },
+  {
+    id: 5,
+    name: "Robert T.",
+    review:
+      "I love the variety of restaurants available. Always something new to try!",
+    avatar: "https://i.pravatar.cc/100?img=57",
+    rating: 4,
+  },
+  {
+    id: 6,
+    name: "William C.",
+    review:
+      "Fast delivery and the food quality is consistently great. Totally worth it.",
+    avatar: "https://i.pravatar.cc/100?img=58",
+    rating: 5,
+  },
+];

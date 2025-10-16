@@ -10,11 +10,11 @@ export default function MenuItem({ dish }) {
   const { state } = useAuth();
   const navigate = useNavigate();
 
-  const darkBtnClass =
-    "dark:border-white dark:text-white dark:hover:bg-gray-200 dark:hover:text-black";
-
   return (
-    <div key={dish.id} className="flex-shrink-0 card bg-red-100 shadow-xl">
+    <div
+      key={dish.id}
+      className="flex-shrink-0 card bg-red-100 shadow-sm hover:shadow-xl transition-shadow duration-300"
+    >
       <figure
         className="cursor-pointer"
         onClick={() => navigate(`/menu-details/${dish._id}`)}
@@ -38,14 +38,14 @@ export default function MenuItem({ dish }) {
           <div className="flex justify-between mt-2">
             <ItemButton
               title="Add to cart"
-              style={`w-1/2 btn btn-error btn-outline mr-1 hover:text-white ${darkBtnClass}`}
+              style={`w-1/2 btn btn-error btn-outline mr-1 hover:text-white`}
               click={() => {
                 state?.user
                   ? addCartItem(dish).then(() => cartItems.refetch())
                   : navigate("/login");
               }}
             />
-            <p className="dark:text-gray-300 text-gray-600 text-2xl font-bold text-right">
+            <p className="text-gray-600 text-2xl font-bold text-right">
               ${dish.price}
             </p>
           </div>
