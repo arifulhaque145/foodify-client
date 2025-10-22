@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import useCart from "../../hooks/useCart";
 
 export default function CartItem({ item }) {
@@ -20,7 +21,7 @@ export default function CartItem({ item }) {
   return (
     <tr key={item._id}>
       <td className="flex items-center gap-4">
-        <img
+        <LazyLoadImage
           src={item.img}
           alt={item.name}
           className="w-16 h-16 object-cover rounded"

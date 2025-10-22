@@ -4,6 +4,7 @@ import {
   TbBrandLinkedin,
   TbBrandTwitter,
 } from "react-icons/tb";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link } from "react-router-dom";
 import logo from "../../assets/foodify_icon.png";
 
@@ -31,7 +32,7 @@ export default function Footer() {
     <section className="bg-base-200">
       <footer className="grid grid-cols-5 gap-4 py-20 px-16 text-base-content">
         <div className="col-span-2">
-          <img
+          <LazyLoadImage
             src={logo}
             alt="logo"
             className="w-16 p-2 rounded-full border-2 border-red-600 cursor-pointer hover:border-red-400"

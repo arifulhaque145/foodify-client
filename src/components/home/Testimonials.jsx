@@ -1,4 +1,5 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import TitleParagraph from "../shared/TitleParagraph";
@@ -33,7 +34,7 @@ export default function Testimonials() {
               className="card bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition"
             >
               <div className="flex flex-col items-center">
-                <img
+                <LazyLoadImage
                   src={user.avatar}
                   alt={user.name}
                   className="w-20 h-20 rounded-full mb-4"
@@ -51,25 +52,6 @@ export default function Testimonials() {
         <p className="custom-next-testimonial absolute top-52 -right-2 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
           <FaChevronRight />
         </p>
-
-        {/* <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((user) => (
-            <div
-              key={user.id}
-              className="card bg-white shadow-xl p-6 rounded-lg hover:shadow-2xl transition"
-            >
-              <div className="flex flex-col items-center">
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  className="w-20 h-20 rounded-full mb-4"
-                />
-                <p className="text-gray-700 mb-4 italic">“{user.review}”</p>
-                <h4 className="font-bold text-lg">{user.name}</h4>
-              </div>
-            </div>
-          ))}
-        </div> */}
       </div>
     </section>
   );

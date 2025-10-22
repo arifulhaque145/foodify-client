@@ -2,6 +2,7 @@ import { signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { FaShoppingCart, FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/foodify_icon.png";
 import auth from "../../firebase/firebase.init";
@@ -129,7 +130,7 @@ export default function Navbar() {
     <div className="fixed top-0 left-0 right-0 z-100 navbar transition-all duration-500 bg-base-100 text-red-400 shadow-md px-4">
       <div className="flex-1">
         <Link to="/" className="flex items-center gap-2 text-xl">
-          <img
+          <LazyLoadImage
             src={logo}
             alt="Logo"
             className={`${scrolled ? "w-12" : "w-8"} h-auto transition-all`}
