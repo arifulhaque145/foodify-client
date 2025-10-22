@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "./useAuth";
 import useAxiosPublic from "./useAxiosPublic";
 
 export default function useCart() {
   const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
   const { state } = useAuth();
 
   const cartItems = useQuery({
@@ -14,40 +15,53 @@ export default function useCart() {
     },
   });
 
-  const addCartItem = async (product) => {
-    const res = await axiosPublic.get(`/cart-items?user=${state?.user}`);
-    const existingItem = res?.data?.find(
-      (cartItem) => cartItem._id === product._id
-    );
+  const addCartItem = useMutation({
+    mutationFn: async (item) => {
+      const res = await axiosPublic.post("/cart-items", item);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
 
-    const { id, catagory, description, ...rest } = product;
-
-    if (existingItem) {
-      await axiosPublic.patch(`/cart-items/${existingItem._id}`, {
-        quantity: existingItem.quantity + 1,
+  const updateCartItemQuantity = useMutation({
+    mutationFn: async ({ itemId, itemQuantity }) => {
+      const res = await axiosPublic.patch(`/cart-items/${itemId}`, {
+        quantity: itemQuantity,
       });
-    } else {
-      await axiosPublic.post("/cart-items", {
-        ...rest,
-        user: state?.user,
-        quantity: 1,
-      });
-    }
-  };
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
 
-  const removeFromCart = async (id) => {
-    await axiosPublic.delete(`/cart-items/${id}`);
-  };
+  const removeFromCart = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosPublic.delete(`/cart-items/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
 
-  const clearCart = async (email) => {
-    await axiosPublic.delete(`/cart-items-all/${email}`);
-  };
+  const clearCart = useMutation({
+    mutationFn: async (email) => {
+      const res = await axiosPublic.delete(`/cart-items-all/${email}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["cart"]);
+    },
+  });
 
-  const updateQuantity = async (itemId, itemQuantity) => {
-    await axiosPublic.patch(`/cart-items/${itemId}`, {
-      quantity: itemQuantity,
-    });
+  return {
+    cartItems,
+    addCartItem,
+    updateCartItemQuantity,
+    removeFromCart,
+    clearCart,
   };
-
-  return { cartItems, addCartItem, removeFromCart, clearCart, updateQuantity };
 }

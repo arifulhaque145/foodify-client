@@ -29,7 +29,7 @@ function Logo({ Icon }) {
 export default function Footer() {
   return (
     <section className="bg-base-200">
-      <footer className="grid grid-cols-5 gap-4 py-20 px-16 text-base-content mt-16">
+      <footer className="grid grid-cols-5 gap-4 py-20 px-16 text-base-content">
         <div className="col-span-2">
           <img
             src={logo}
@@ -50,21 +50,21 @@ export default function Footer() {
         <div>
           <p className="font-extrabold text-2xl mb-3">Services</p>
           {data.quickLinks.map((link) => (
-            <LinkItem link={link} />
+            <LinkItem key={link.id} link={link} />
           ))}
         </div>
         <div>
           <p className="font-extrabold text-2xl mb-3">Our Menu</p>
           {data.ourMenu.map((link) => (
-            <LinkItem link={link} />
+            <LinkItem key={link.id} link={link} />
           ))}
         </div>
         <div>
           <p className="font-extrabold text-2xl mb-3">Contact Us</p>
           {data.contactUs.map((link) => (
-            <div className="mb-2">
+            <div key={link.id} className="mb-2">
               <p className="font-bold text-xl">{link.title}</p>
-              <Link clclassName="font-medium text-gray-500 transition duration-300 hover:text-red-400 block">
+              <Link className="font-medium text-gray-500 transition duration-300 hover:text-red-400 block">
                 {link.subtitle}
               </Link>
             </div>

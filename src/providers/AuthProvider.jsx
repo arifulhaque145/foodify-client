@@ -5,8 +5,7 @@ import { actionTypes, AuthContext } from "./ActionTypes";
 
 const initialState = {
   user: null,
-  loading: false,
-  googleLogin: false,
+  loading: true,
 };
 
 function actionReducer(state, action) {
@@ -31,24 +30,16 @@ function actionReducer(state, action) {
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(actionReducer, initialState);
 
-  const actionUser = (email) => {
-    dispatch({ type: actionTypes.login, payload: email });
-  };
-
-  const setLoading = (state) => {
-    dispatch({ type: actionTypes.loading, payload: state });
-  };
-
-  const setGoogleLoading = (state) => {
-    dispatch({ type: actionTypes.loading, payload: state });
+  const setUser = (user) => {
+    dispatch({ type: actionTypes.login, payload: user });
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch({ type: "LOGIN", payload: user.email });
+        dispatch({ type: actionTypes.login, payload: user.email });
       } else {
-        dispatch({ type: "LOGOUT" });
+        dispatch({ type: actionTypes.logout });
       }
     });
 
@@ -56,9 +47,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const actions = {
-    actionUser,
-    setLoading,
-    setGoogleLoading,
+    setUser,
   };
 
   return (

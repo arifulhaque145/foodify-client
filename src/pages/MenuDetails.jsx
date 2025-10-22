@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useNavigate, useParams } from "react-router-dom";
 import ItemButton from "../components/shared/ItemButton";
+import useAuth from "../hooks/useAuth";
 import useCart from "../hooks/useCart";
-import useMenu from "../hooks/useMenu";
+import { useSingleMenu } from "../hooks/useMenu";
 
 export default function MenuDetails() {
   const { id } = useParams();
-  const { state } = useState();
+  const { data: menu } = useSingleMenu(id);
+  const { state } = useAuth();
   const { cartItems, addCartItem } = useCart();
-  const { menuItems } = useMenu();
+
   const navigate = useNavigate();
 
-  const menu = menuItems?.data?.find((item) => item._id === id);
-
   return (
-    <div className="container mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8">
+    <div className="container mx-auto p-4 md:p-8 flex flex-col md:flex-row gap-8 mt-20">
       <div className="flex-1">
-        <img
-          src={menu?.img}
+        <LazyLoadImage
+          src={menu?.img_source}
           alt={menu?.name}
-          className="w-full rounded-lg shadow-lg object-cover h-64 md:h-full"
+          width={24}
+          className="w-64 rounded-lg shadow-lg object-cover h-20 md:h-full"
         />
       </div>
       <div className="flex-1">
@@ -28,15 +29,16 @@ export default function MenuDetails() {
         <p className="text-2xl dark:text-gray-300 font-semibold text-gray-700 mb-4">
           ${menu?.price}
         </p>
-        <p className="text-gray-700 dark:text-gray-300 mb-4">
-          {menu?.description}
-        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">{menu?.desc}</p>
         <ItemButton
           title="Add to cart"
           style="w-1/2 btn-error btn-outline dark:btn-success mr-1"
           click={() => {
             state?.user
-              ? addCartItem(menu).then(() => cartItems.refetch())
+              ? addCartItem
+                  .mutateAsync({ user: state?.user, ...menu })
+                  .then(() => cartItems.refetch())
+                  .catch((err) => console.error("Error:", err))
               : navigate("/login");
           }}
         />

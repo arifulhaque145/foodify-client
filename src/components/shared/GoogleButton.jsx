@@ -1,5 +1,4 @@
 import { signInWithPopup } from "firebase/auth";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import auth, { googleProvider } from "../../firebase/firebase.init";
 import useAuth from "../../hooks/useAuth";
@@ -7,19 +6,17 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 export default function GoogleButton() {
   const axiosPublic = useAxiosPublic();
-  const { actionUser, setLoading } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       await axiosPublic.post("/users/register", {
         name: result.user.displayName,
         email: result.user.email,
       });
-      setLoading(false);
-      actionUser(result.user.email);
+      setUser(result.user);
       navigate("/");
     } catch (error) {
       console.error("Google Sign-In Error:", error);

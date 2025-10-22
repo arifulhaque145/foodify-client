@@ -14,11 +14,10 @@ export default function Register() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { state, actionUser, setLoading } = useAuth();
+  const { state, actionUser } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   const onSubmit = async (data) => {
-    setLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -27,8 +26,7 @@ export default function Register() {
       );
       await updateProfile(userCredential.user, { displayName: data.name });
       await axiosPublic.post("/users/register", data);
-      setLoading(false);
-      actionUser(data.email);
+      actionUser(data);
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error.message);

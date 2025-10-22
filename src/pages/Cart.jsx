@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CartItem from "../components/CartItem";
+import CartItem from "../components/order/CartItem";
 import ItemButton from "../components/shared/ItemButton";
 import Loader from "../components/shared/Loader";
 import TitleParagraph from "../components/shared/TitleParagraph";
@@ -12,10 +12,11 @@ export default function Cart() {
   const { state } = useAuth();
   const { cartItems, clearCart } = useCart();
   const { placeOrder } = useOrder();
+  const navigate = useNavigate();
 
+  // Calculation
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const navigate = useNavigate();
 
   const subtotal =
     cartItems?.data?.reduce(
@@ -25,10 +26,12 @@ export default function Cart() {
   const shippingCost = subtotal > 0 ? 10 : 0;
   const total = subtotal + shippingCost - discount;
 
+  // Promo Code
   const handleApplyPromo = () => {
     setDiscount(promoCode.toUpperCase() === "DISCOUNT10" ? subtotal * 0.1 : 0);
   };
 
+  // Creating new Order
   const newOrder = {
     user: state?.user,
     items: cartItems?.data?.map(({ user, ...rest }) => rest),
@@ -55,7 +58,7 @@ export default function Cart() {
     cartItems?.data?.length === 0
   ) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 h-96 flex justify-center items-center">
         <p className="text-center text-4xl uppercase font-light">
           Your cart is empty.
         </p>
@@ -64,7 +67,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container h-screen mx-auto px-4 py-8 mt-20">
       <TitleParagraph
         title="Your Cart"
         paragraph="Manage your shopping items here."
@@ -72,6 +75,7 @@ export default function Cart() {
         paraStyle="text-center mb-6 text-slate-500 italic"
       />
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Cart Table here */}
         <div className="w-full">
           <div className="card bg-base-100 shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Shopping Items</h2>
@@ -92,12 +96,14 @@ export default function Cart() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="5" className="text-center">
+                  <td colSpan="5" className="text-right">
                     <ItemButton
                       title="Clear Cart"
                       style="btn-success btn-outline"
                       click={() => {
-                        clearCart(state?.user).then(() => cartItems.refetch());
+                        clearCart
+                          .mutateAsync(state?.user)
+                          .then(() => cartItems.refetch());
                       }}
                     />
                   </td>
@@ -107,6 +113,7 @@ export default function Cart() {
           </div>
         </div>
 
+        {/* Order or Checkout here */}
         <div className="w-full lg:w-1/3">
           <div className="card bg-base-100 shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>

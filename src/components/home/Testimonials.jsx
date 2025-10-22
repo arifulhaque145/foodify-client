@@ -1,19 +1,19 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import TitleParagraph from "./shared/TitleParagraph";
+import TitleParagraph from "../shared/TitleParagraph";
 
 export default function Testimonials() {
   return (
-    <section className="py-16 bg-base-200 text-base-content">
+    <section className="py-12 bg-base-200 text-base-content">
       <div className="relative max-w-7xl mx-auto px-4 text-center">
         <TitleParagraph
           title="What Our Customers Say"
           paragraph="Real stories from happy food lovers"
           titleStyle="text-4xl font-extrabold text-center"
-          paraStyle="text-center font-light text-gray-500 py-4"
+          paraStyle="text-center font-light text-gray-500 py-4 mb-8"
         />
-        <div className="mb-8"></div>
+
         <Swiper
           modules={[Navigation]}
           spaceBetween={30}
@@ -25,12 +25,12 @@ export default function Testimonials() {
           watchOverflow={true}
           onSlideChange={() => console.log("slide change")}
           onSwiper={(swiper) => console.log(swiper)}
-          className="flex gap-4 !p-8"
+          className="flex gap-4"
         >
           {reviews.map((user) => (
             <SwiperSlide
               key={user.id}
-              className="card bg-white shadow-xl p-6 rounded-lg hover:shadow-2xl transition"
+              className="card bg-white shadow-sm p-6 rounded-lg hover:shadow-md transition"
             >
               <div className="flex flex-col items-center">
                 <img
@@ -45,12 +45,12 @@ export default function Testimonials() {
           ))}
         </Swiper>
 
-        <button className="custom-prev-testimonial absolute top-1/2 -left-6 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
+        <p className="custom-prev-testimonial absolute top-52 -left-2 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
           <FaChevronLeft />
-        </button>
-        <button className="custom-next-testimonial absolute top-1/2 -right-6 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
+        </p>
+        <p className="custom-next-testimonial absolute top-52 -right-2 z-10 -translate-y-1/2 bg-gray-200 p-4 rounded-full cursor-pointer disabled:opacity-0 hover:bg-red-400 hover:text-white duration-200 mt-8">
           <FaChevronRight />
-        </button>
+        </p>
 
         {/* <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((user) => (

@@ -1,5 +1,4 @@
-import React from "react";
-import OrderItem from "../components/OrderItem";
+import OrderItem from "../components/order/OrderItem";
 import TitleParagraph from "../components/shared/TitleParagraph";
 import useAuth from "../hooks/useAuth";
 import useOrder from "../hooks/useOrder";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import MenuItem from "../components/menu/MenuItem";
-import TitleParagraph from "./shared/TitleParagraph";
+import MenuItem from "../menu/MenuItem";
+import TitleParagraph from "../shared/TitleParagraph";
 
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "swiper/css";

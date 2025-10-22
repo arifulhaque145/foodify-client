@@ -13,14 +13,12 @@ export default function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { state, setLoading, actionUser } = useAuth();
+  const { state, setUser } = useAuth();
 
   const onSubmit = async (data) => {
-    setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, data.email, data.password);
-      actionUser(data.email);
-      setLoading(false);
+      setUser(data);
       navigate("/");
     } catch (error) {
       console.error("Login error:", error.message);
@@ -28,7 +26,7 @@ export default function Login() {
   };
 
   return (
-    <div className="p-12 mt-36 max-w-md mx-auto border border-gray-400 rounded shadow-md">
+    <div className="p-12 lg:mt-36 md:mt-20 mb-20 max-w-md mx-auto border border-gray-400 rounded shadow-md">
       <h2 className="text-2xl font-bold mb-12 text-center">Login</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input
@@ -49,7 +47,7 @@ export default function Login() {
         {errors.password && (
           <p className="text-red-500 text-sm">{errors.password.message}</p>
         )}
-        {!state?.loading ? (
+        {!state.loading ? (
           <button className="btn btn-error text-white w-full" type="submit">
             Login
           </button>

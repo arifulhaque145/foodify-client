@@ -1,6 +1,6 @@
 import React from "react";
-import useOrder from "../hooks/useOrder";
-import ItemButton from "./shared/ItemButton";
+import useOrder from "../../hooks/useOrder";
+import ItemButton from "../shared/ItemButton";
 
 export default function OrderItem({ order }) {
   const { orders, orderCancel } = useOrder();

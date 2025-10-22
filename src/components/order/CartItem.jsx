@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import useCart from "../hooks/useCart";
+import useCart from "../../hooks/useCart";
 
 export default function CartItem({ item }) {
   const [quantityValue, setQuantityValue] = useState(item.quantity);
-  const { removeFromCart, updateQuantity } = useCart();
+  const { removeFromCart, updateCartItemQuantity } = useCart();
   const { cartItems } = useCart();
 
-  useEffect(() => {
-    updateQuantity(item._id, parseInt(quantityValue)).then(() =>
-      cartItems.refetch()
-    );
-  }, [item._id, cartItems, updateQuantity, quantityValue]);
+  const handleUpdateQuantity = (e) => {
+    setQuantityValue(e.target.value);
+    updateCartItemQuantity
+      .mutateAsync({
+        itemId: item._id,
+        itemQuantity: parseInt(e.target.value),
+      })
+      .then(() => cartItems.refetch());
+  };
 
   return (
     <tr key={item._id}>
@@ -29,9 +33,7 @@ export default function CartItem({ item }) {
           type="number"
           min="1"
           value={quantityValue}
-          onChange={(e) => {
-            setQuantityValue(e.target.value);
-          }}
+          onChange={handleUpdateQuantity}
           className="input input-sm w-16"
         />
       </td>
@@ -39,7 +41,9 @@ export default function CartItem({ item }) {
       <td className="text-center">
         <button
           onClick={() => {
-            removeFromCart(item._id).then(() => cartItems.refetch());
+            removeFromCart
+              .mutateAsync(item._id)
+              .then(() => cartItems.refetch());
           }}
           className="btn btn-sm btn-error"
         >

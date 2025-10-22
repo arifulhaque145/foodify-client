@@ -9,7 +9,9 @@ export default function MainLayout() {
       <div className="">
         <Outlet />
       </div>
-      <Footer />
+      <div className="relative bg-white z-50">
+        <Footer />
+      </div>
     </div>
   );
 }

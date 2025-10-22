@@ -1,10 +1,10 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import newsletter from "../assets/newsletter.png";
-import TitleParagraph from "./shared/TitleParagraph";
+import newsletter from "../../assets/newsletter.png";
+import TitleParagraph from "../shared/TitleParagraph";
 
 export default function Newsletter() {
   return (
-    <section className="pt-16 px-8 text-primary-content flex items-center">
+    <section className="py-16 px-8 text-primary-content flex items-center">
       <LazyLoadImage
         src={newsletter}
         alt="Newsletter"

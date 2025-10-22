@@ -1,5 +1,7 @@
-// menuUtils.js
-export function processMenu(items, { search = "", sortBy = "", isAsc = true }) {
+export function processMenu(
+  items,
+  { search = "", filterBy = "", sortBy = "", isAsc = true }
+) {
   let result = [...items];
 
   // 🔍 Search
@@ -9,14 +11,19 @@ export function processMenu(items, { search = "", sortBy = "", isAsc = true }) {
     );
   }
 
+  // 🔍 Filter
+  if (filterBy === "low") {
+    result = result.filter((item) => item.price <= 10);
+  } else if (filterBy === "high") {
+    result = result.filter((item) => item.price > 10 && item.price <= 20);
+  }
+
   // ↕️ Sort
   if (sortBy === "name") {
     result.sort((a, b) =>
       isAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
     );
-  }
-  
-  if (sortBy === "price") {
+  } else if (sortBy === "price") {
     result.sort((a, b) => (isAsc ? a.price - b.price : b.price - a.price));
   }
 

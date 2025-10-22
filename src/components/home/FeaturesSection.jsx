@@ -1,5 +1,5 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import BuyCart from "../assets/buy_cart.png";
+import BuyCart from "../../assets/buy_cart.png";
 
 const chooseItems = [
   {
@@ -30,9 +30,9 @@ const chooseItems = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-16 bg-base-200 text-base-content">
+    <section className="bg-base-200 text-base-content">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <div className="flex items-center gap-8 mb-12">
+        <div className="flex items-center gap-8">
           <LazyLoadImage
             src={BuyCart}
             alt="Image"
